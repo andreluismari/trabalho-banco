@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:5.7.36
+    container_name: mysql
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: admin1
+      MYSQL_DATABASE: projeto
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  quarkus:
+    build: .
+    container_name: quarkus
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      QUARKUS_DATASOURCE_JDBC_URL: jdbc:mysql://mysql:3306/projeto
+      QUARKUS_DATASOURCE_USERNAME: root
+      QUARKUS_DATASOURCE_PASSWORD: admin1
+    depends_on:
+      - mysql
+
+volumes:
+  mysql_data:
